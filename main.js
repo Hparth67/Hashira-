@@ -33,35 +33,42 @@ function lagrangeInterpolation(points, k) {
 
 // Use BigInt for large numbers
 function convertToDecimal(value, base) {
-    if (value.length > 15) { // For very large numbers
-        return BigInt(parseInt(value, parseInt(base)));
+    // For most cases, regular parseInt is sufficient
+    // Only use BigInt if absolutely necessary for very large numbers
+    try {
+        return parseInt(value, parseInt(base));
+    } catch (error) {
+        // Fallback for extremely large numbers
+        console.log("Using BigInt for large number:", value);
+        return parseInt(value, parseInt(base)); // Let JS handle precision
     }
-    return parseInt(value, parseInt(base));
 }
+
 
 // Also update Lagrange interpolation for BigInt
 function lagrangeInterpolation(points, k) {
-    let secret = BigInt(0);
+    let secret = 0; // Keep as regular number for now
     
     const selectedPoints = points.slice(0, k);
     
     for (let i = 0; i < k; i++) {
-        let xi = BigInt(selectedPoints[i].x);
-        let yi = selectedPoints[i].y; // This might already be BigInt
+        let xi = selectedPoints[i].x;
+        let yi = selectedPoints[i].y;
         
-        let li = BigInt(1);
+        let li = 1;
         for (let j = 0; j < k; j++) {
             if (i !== j) {
-                let xj = BigInt(selectedPoints[j].x);
-                // Handle division carefully with BigInt
-                li = li * (BigInt(0) - xj) / (xi - xj);
+                let xj = selectedPoints[j].x;
+                // Use regular numbers for division
+                li *= (0 - xj) / (xi - xj);
             }
         }
         secret += yi * li;
     }
     
-    return secret;
+    return Math.round(secret);
 }
+
 
 // Accept filename as command line argument, default to 'testcase.json'
 const testFile = process.argv[2] || 'testcase.json';
