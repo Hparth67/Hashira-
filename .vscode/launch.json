@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Interactive Test Selection",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\main.js",
+            "console": "integratedTerminal",
+            "args": ["${input:testFile}"]
+        }
+    ],
+    "inputs": [
+        {
+            "id": "testFile",
+            "description": "Which test file to use?",
+            "type": "pickString",
+            "options": [
+                "testcase.json",
+                "testcase2.json"
+            ]
+        }
+    ]
+}
